@@ -310,15 +310,12 @@ class BookmarkMindMap {
         });
       treeLayout(root);
 
-      // d3.tree: d.x = vertical spread (0..treeHeight), d.y = depth (0..treeDepth)
-      // We want: horizontal = depth * direction, vertical = spread centered at 0
-      const centerOffset = treeHeight / 2;
-
-      // Build a map of hierarchy node -> final coords
+      // With nodeSize, root is at (0,0), d.x = vertical spread, d.y = depth
+      // We want: horizontal = depth * direction, vertical = spread (already centered)
       const coordMap = new Map();
       root.each(d => {
         const finalX = d.y * direction;          // depth -> horizontal
-        const finalY = d.x - centerOffset;       // spread -> vertical, centered
+        const finalY = d.x;                      // spread -> vertical (nodeSize centers at 0)
         coordMap.set(d, { x: finalX, y: finalY });
       });
 
