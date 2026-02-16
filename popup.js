@@ -286,7 +286,7 @@ class BookmarkMindMap {
     const allNodes = [];
     const allLinks = []; // each: {sx, sy, tx, ty}
 
-    const nodeSpacingY = 28;
+    const nodeSpacingY = 32;
     const depthSpacingX = 220;
 
     // Layout one side of the tree and collect plain coordinate objects
@@ -299,9 +299,15 @@ class BookmarkMindMap {
       const treeHeight = leafCount * nodeSpacingY;
       const treeDepth = depthSpacingX * Math.max(root.height, 1);
 
+      // Use nodeSize instead of size for consistent per-node spacing
+      // This prevents expanded subtrees from overlapping neighbors
       const treeLayout = d3.tree()
-        .size([treeHeight, treeDepth])
-        .separation((a, b) => a.parent === b.parent ? 1 : 1.4);
+        .nodeSize([nodeSpacingY, depthSpacingX])
+        .separation((a, b) => {
+          if (a.parent === b.parent) return 1;
+          // More space between nodes from different parents
+          return 1.5;
+        });
       treeLayout(root);
 
       // d3.tree: d.x = vertical spread (0..treeHeight), d.y = depth (0..treeDepth)
