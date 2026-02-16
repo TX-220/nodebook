@@ -295,9 +295,6 @@ class BookmarkMindMap {
 
       const sideData = { ...this.data, children: children };
       const root = d3.hierarchy(sideData, getVisibleChildren);
-      const leafCount = Math.max(countVisibleLeaves(sideData), 2);
-      const treeHeight = leafCount * nodeSpacingY;
-      const treeDepth = depthSpacingX * Math.max(root.height, 1);
 
       // Use nodeSize instead of size for consistent per-node spacing
       // This prevents expanded subtrees from overlapping neighbors
