@@ -406,13 +406,25 @@ class BookmarkMindMap {
     // Add root node at center
     allNodes.unshift({ data: this.data, depth: 0, x: 0, y: 0, side: 0 });
 
-    // Apply any manually dragged positions, then update nodePositions map
+    // Apply any manually dragged positions, cascading side changes parent → child
     this.nodePositions.clear();
+    // Sort by depth so parents are resolved before their children
+    allNodes.sort((a, b) => a.depth - b.depth);
+    const nodeById = new Map(allNodes.map(n => [n.data.id, n]));
     allNodes.forEach(n => {
       if (this.customPositions.has(n.data.id)) {
         const cp = this.customPositions.get(n.data.id);
         n.x = cp.x;
         n.y = cp.y;
+        // Update side based on which side of center the node was dragged to
+        n.side = n.x >= 0 ? 1 : -1;
+      } else if (n.parentId) {
+        const parent = nodeById.get(n.parentId);
+        // If parent was dragged to opposite side, mirror this node's x
+        if (parent && parent.depth > 0 && parent.side !== n.side) {
+          n.x = -n.x;
+          n.side = parent.side;
+        }
       }
       this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
     });
