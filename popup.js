@@ -483,6 +483,15 @@ class BookmarkMindMap {
 
     this.setupDrag(nodeGroups);
 
+    // Invisible large hit area — makes clicking/dragging much easier.
+    // Must be appended BEFORE the visible circle so it renders beneath it.
+    // Inline styles override the .node circle CSS rules to keep it invisible.
+    nodeGroups.append('circle')
+      .attr('r', d => d.depth === 0 ? 22 : 16)
+      .style('fill', 'transparent')
+      .style('stroke', 'none')
+      .style('cursor', 'pointer');
+
     nodeGroups.append('circle')
       .attr('r', d => d.depth === 0 ? 10 : 5);
 
