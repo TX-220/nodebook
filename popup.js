@@ -781,20 +781,18 @@ class BookmarkMindMap {
   // --- Expand / Collapse ---
 
   expandAll() {
-    this.collapsedNodes.clear();
+    this._setCollapsed(this.data, false);
     this.render();
   }
 
   collapseAll() {
-    this.collapseNode(this.data);
+    this._setCollapsed(this.data, true);
     this.render();
   }
 
-  collapseNode(node) {
-    if (node.children && node.children.length > 0) {
-      this.collapsedNodes.add(node.id);
-      node.children.forEach(child => this.collapseNode(child));
-    }
+  _setCollapsed(node, value) {
+    if (node.isFolder) node.collapsed = value;
+    if (node.children) node.children.forEach(child => this._setCollapsed(child, value));
   }
 
   resetView() {
