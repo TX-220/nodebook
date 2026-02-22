@@ -620,12 +620,8 @@ class BookmarkMindMap {
       return;
     }
 
-    if (d.data.isFolder && d.data.children && d.data.children.length > 0) {
-      if (this.collapsedNodes.has(d.data.id)) {
-        this.collapsedNodes.delete(d.data.id);
-      } else {
-        this.collapsedNodes.add(d.data.id);
-      }
+    if (d.data.isFolder) {
+      d.data.collapsed = !d.data.collapsed;
       this.render();
     }
   }
