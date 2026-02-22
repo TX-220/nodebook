@@ -405,6 +405,29 @@ class BookmarkMindMap {
     // Add root node at center
     allNodes.unshift({ data: this.data, depth: 0, x: 0, y: 0, side: 0 });
 
+    // Apply any manually dragged positions, then update nodePositions map
+    this.nodePositions.clear();
+    allNodes.forEach(n => {
+      if (this.customPositions.has(n.data.id)) {
+        const cp = this.customPositions.get(n.data.id);
+        n.x = cp.x;
+        n.y = cp.y;
+      }
+      this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
+    });
+
+    // Also update link start/end coords to reflect custom positions
+    allLinks.forEach(l => {
+      if (this.nodePositions.has(l.sourceId)) {
+        const p = this.nodePositions.get(l.sourceId);
+        l.sx = p.x; l.sy = p.y;
+      }
+      if (this.nodePositions.has(l.targetId)) {
+        const p = this.nodePositions.get(l.targetId);
+        l.tx = p.x; l.ty = p.y;
+      }
+    });
+
     // --- Draw links as smooth horizontal bezier curves ---
     this.g.selectAll('.link')
       .data(allLinks)
