@@ -473,7 +473,11 @@ class BookmarkMindMap {
       .style('font-size', d => d.depth === 0 ? '15px' : '12px')
       .style('font-weight', d => d.depth === 0 ? 'bold' : 'normal');
 
-    this.centerView();
+    // Only center the view on the very first render
+    if (!this.hasRendered) {
+      this.centerView();
+      this.hasRendered = true;
+    }
   }
 
   centerView() {
