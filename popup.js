@@ -484,14 +484,25 @@ class BookmarkMindMap {
       this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
     });
 
-    // Second pass: cascade `side` from parent → children so text direction is
-    // always consistent within a branch, even after drag-across-center.
-    // allNodes is already depth-sorted, so each parent is processed before its
-    // children, meaning the cascade propagates to all depths in one sweep.
+    // Second pass: cascade `side` AND enforce outward placement.
+    // Each child must be on the outward side of its parent (same direction as
+    // the branch). If a child's customPosition left it on the wrong side,
+    // mirror it around the parent so it snaps back to the correct side.
+    // allNodes is depth-sorted so parents are always processed before children.
     allNodes.forEach(n => {
       if (n.depth > 1 && n.parentId) {
         const parent = nodeById.get(n.parentId);
-        if (parent) n.side = parent.side;
+        if (parent) {
+          n.side = parent.side;
+          if (parent.depth > 0 && parent.side !== 0) {
+            const outward = parent.side > 0 ? n.x >= parent.x : n.x <= parent.x;
+            if (!outward) {
+              n.x = 2 * parent.x - n.x;
+              this.customPositions.set(n.data.id, { x: n.x, y: n.y });
+              this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
+            }
+          }
+        }
       }
     });
 
