@@ -546,7 +546,7 @@ class BookmarkMindMap {
         const classes = ['node'];
         if (d.data.isFolder) classes.push('folder');
         if (d.depth === 0) classes.push('root');
-        if (this.collapsedNodes.has(d.data.id)) classes.push('collapsed');
+        if (d.data.collapsed) classes.push('collapsed');
         return classes.join(' ');
       })
       .attr('transform', d => `translate(${d.x},${d.y})`)
