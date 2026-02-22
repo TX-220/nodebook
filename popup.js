@@ -365,9 +365,10 @@ class BookmarkMindMap {
   render() {
     this.g.selectAll('*').remove();
 
-    // Determine visible children (respecting collapsed state)
+    // Determine visible children (respecting collapsed state).
+    // collapsed is stored directly on each data node as d.collapsed.
     const getVisibleChildren = (d) => {
-      if (this.collapsedNodes.has(d.id)) return null;
+      if (d.collapsed) return null;
       return d.children && d.children.length > 0 ? d.children : null;
     };
 
