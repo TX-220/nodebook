@@ -266,8 +266,23 @@ class BookmarkMindMap {
   // --- Drag & Drop ---
 
   linkPath(sx, sy, tx, ty) {
-    const mx = (sx + tx) / 2;
-    return `M${sx},${sy} C${mx},${sy} ${mx},${ty} ${tx},${ty}`;
+    if (Math.abs(sy - ty) < 1) {
+      // Same Y: straight horizontal line
+      return `M${sx},${sy} L${tx},${ty}`;
+    }
+    // Bracket/elbow style: horizontal from parent → curved corner → vertical trunk
+    // → curved corner → horizontal to child.
+    // This is the classic mind-map branching look.
+    const branchX = (sx + tx) / 2;           // vertical trunk position
+    const r = Math.min(10, Math.abs(ty - sy) / 2); // rounded corner radius
+    const dx = tx > sx ? 1 : -1;             // right or left direction
+    const dy = ty > sy ? 1 : -1;             // down or up direction
+    return `M${sx},${sy}` +
+      ` H${branchX - dx * r}` +                                    // → trunk
+      ` Q${branchX},${sy} ${branchX},${sy + dy * r}` +            // corner: H→V
+      ` V${ty - dy * r}` +                                         // vertical trunk
+      ` Q${branchX},${ty} ${branchX + dx * r},${ty}` +            // corner: V→H
+      ` H${tx}`;                                                    // → child
   }
 
   setupDrag(nodeGroups) {
