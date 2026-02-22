@@ -14,8 +14,7 @@ class BookmarkMindMap {
     this.currentTransform = null;
     this.editingNode = null;
 
-    // Performance: Track collapsed state
-    this.collapsedNodes = new Set();
+    // collapsed state is stored on each data node as node.collapsed (boolean)
 
     // Cache all bookmark URLs for duplicate detection
     this.existingUrls = new Set();
