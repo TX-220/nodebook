@@ -465,8 +465,14 @@ class BookmarkMindMap {
         const cp = this.customPositions.get(n.data.id);
         n.x = cp.x;
         n.y = cp.y;
-        // Update side based on which side of center the node was dragged to
-        n.side = n.x >= 0 ? 1 : -1;
+        // Only depth-1 nodes determine their side from physical x position
+        // (they can be dragged across center to switch branches).
+        // Depth-2+ nodes must NOT recalculate side here — the second cascade
+        // pass below will align them with their parent, which is what the user
+        // expects: "if the parent faces right, children face right too."
+        if (n.depth === 1) {
+          n.side = n.x >= 0 ? 1 : -1;
+        }
       } else if (n.parentId) {
         const parent = nodeById.get(n.parentId);
         // If parent was dragged to opposite side, mirror this node's x
