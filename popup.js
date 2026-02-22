@@ -434,10 +434,7 @@ class BookmarkMindMap {
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', d => {
-        const mx = (d.sx + d.tx) / 2;
-        return `M${d.sx},${d.sy} C${mx},${d.sy} ${mx},${d.ty} ${d.tx},${d.ty}`;
-      });
+      .attr('d', d => this.linkPath(d.sx, d.sy, d.tx, d.ty));
 
     // --- Draw nodes ---
     const nodeGroups = this.g.selectAll('.node')
