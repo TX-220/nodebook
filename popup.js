@@ -24,6 +24,9 @@ class BookmarkMindMap {
   start() {
     // Set d3 reference after class is fully constructed
     this.currentTransform = d3.zoomIdentity;
+    this.customPositions = new Map(); // id -> {x,y} for manually dragged nodes
+    this.nodePositions = new Map();   // id -> {x,y} rebuilt each render
+    this.hasRendered = false;
     this.init();
   }
 
