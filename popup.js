@@ -688,7 +688,10 @@ class BookmarkMindMap {
   }
 
   resetView() {
-    this.centerView();
+    // Clear all manually dragged positions and re-layout
+    this.customPositions.clear();
+    this.hasRendered = false;
+    this.render();
   }
 
   // --- Context menu ---
