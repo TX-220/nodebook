@@ -285,34 +285,64 @@ class BookmarkMindMap {
       ` H${tx}`;                                                    // → child
   }
 
+  // Returns all visible descendant IDs of nodeId (breadth-first).
+  getDescendants(nodeId) {
+    const result = [];
+    const queue = [...(this.nodeChildren.get(nodeId) || [])];
+    while (queue.length > 0) {
+      const id = queue.shift();
+      result.push(id);
+      (this.nodeChildren.get(id) || []).forEach(cid => queue.push(cid));
+    }
+    return result;
+  }
+
   setupDrag(nodeGroups) {
     const drag = d3.drag()
       .clickDistance(5) // movements < 5px count as clicks, not drags
       .on('start', (event, d) => {
-        // Prevent the zoom/pan handler from receiving this event
         event.sourceEvent.stopPropagation();
-        // Bring dragged node to front
-        const el = this.g.selectAll('.node').filter(n => n.data.id === d.data.id);
-        el.raise();
+        // Bring the entire subtree to the front
+        const ids = new Set([d.data.id, ...this.getDescendants(d.data.id)]);
+        this.g.selectAll('.node').filter(n => ids.has(n.data.id)).raise();
       })
       .on('drag', (event, d) => {
-        // d3.pointer with this.g.node() gives coords in g's local space,
-        // correctly accounting for the zoom transform
+        // d3.pointer gives coords in g's local space (accounts for zoom/pan)
         const [mx, my] = d3.pointer(event, this.g.node());
+        const ddx = mx - d.x;   // incremental delta since last event
+        const ddy = my - d.y;
+
+        // All nodes to move: dragged node + every visible descendant
+        const descendants = this.getDescendants(d.data.id);
+        const allToMove = [d.data.id, ...descendants];
+        const moveSet = new Set(allToMove);
+
+        // Apply delta to every node's position in the live map
+        allToMove.forEach(id => {
+          const pos = this.nodePositions.get(id);
+          if (pos) this.nodePositions.set(id, { x: pos.x + ddx, y: pos.y + ddy });
+        });
+
+        // Update d's datum so the next event's delta is correct
         d.x = mx;
         d.y = my;
 
-        // Move the node element
+        // Sync descendant datums (so they can be dragged independently later)
+        // and update their SVG transforms
         this.g.selectAll('.node')
-          .filter(n => n.data.id === d.data.id)
-          .attr('transform', `translate(${d.x},${d.y})`);
+          .filter(n => moveSet.has(n.data.id))
+          .each((n, i, nodes) => {
+            const pos = this.nodePositions.get(n.data.id);
+            if (pos) {
+              n.x = pos.x;
+              n.y = pos.y;
+              d3.select(nodes[i]).attr('transform', `translate(${pos.x},${pos.y})`);
+            }
+          });
 
-        // Update position in live map
-        this.nodePositions.set(d.data.id, { x: d.x, y: d.y });
-
-        // Redraw all links connected to this node
+        // Redraw every link that touches any moved node
         this.g.selectAll('.link')
-          .filter(l => l.sourceId === d.data.id || l.targetId === d.data.id)
+          .filter(l => moveSet.has(l.sourceId) || moveSet.has(l.targetId))
           .attr('d', l => {
             const sp = this.nodePositions.get(l.sourceId) || { x: l.sx, y: l.sy };
             const tp = this.nodePositions.get(l.targetId) || { x: l.tx, y: l.ty };
@@ -320,8 +350,12 @@ class BookmarkMindMap {
           });
       })
       .on('end', (event, d) => {
-        // Persist the custom position
-        this.customPositions.set(d.data.id, { x: d.x, y: d.y });
+        // Persist custom positions for dragged node and all descendants
+        const allToMove = [d.data.id, ...this.getDescendants(d.data.id)];
+        allToMove.forEach(id => {
+          const pos = this.nodePositions.get(id);
+          if (pos) this.customPositions.set(id, { x: pos.x, y: pos.y });
+        });
       });
 
     nodeGroups.call(drag);
