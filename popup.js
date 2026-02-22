@@ -377,7 +377,8 @@ class BookmarkMindMap {
           depth: d.depth,
           x: pos.x,
           y: pos.y,
-          side: direction
+          side: direction,
+          parentId: d.parent.depth === 0 ? this.data.id : d.parent.data.id
         });
       });
 
