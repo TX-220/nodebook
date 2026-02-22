@@ -444,6 +444,17 @@ class BookmarkMindMap {
       this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
     });
 
+    // Build parent→children map used by subtree drag
+    this.nodeChildren = new Map();
+    allNodes.forEach(n => {
+      if (n.parentId) {
+        if (!this.nodeChildren.has(n.parentId)) {
+          this.nodeChildren.set(n.parentId, []);
+        }
+        this.nodeChildren.get(n.parentId).push(n.data.id);
+      }
+    });
+
     // Also update link start/end coords to reflect custom positions
     allLinks.forEach(l => {
       if (this.nodePositions.has(l.sourceId)) {
