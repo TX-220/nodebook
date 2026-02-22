@@ -387,7 +387,10 @@ class BookmarkMindMap {
           ? { x: 0, y: 0 }
           : coordMap.get(l.source);
         const tgtPos = coordMap.get(l.target);
+        const sourceId = l.source.depth === 0 ? this.data.id : l.source.data.id;
+        const targetId = l.target.data.id;
         allLinks.push({
+          sourceId, targetId,
           sx: srcPos.x, sy: srcPos.y,
           tx: tgtPos.x, ty: tgtPos.y
         });
