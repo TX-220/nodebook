@@ -605,6 +605,10 @@ class BookmarkMindMap {
 
   handleNodeClick(event, d) {
     event.stopPropagation();
+    // detail > 1 means this click is part of a double-click sequence.
+    // The two rapid clicks would toggle twice and cancel out, so we ignore them
+    // here and let handleNodeDblClick deal with the gesture instead.
+    if (event.detail > 1) return;
 
     if (!d.data.isFolder && d.data.url) {
       try {
