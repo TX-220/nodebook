@@ -263,6 +263,55 @@ class BookmarkMindMap {
     });
   }
 
+  // --- Drag & Drop ---
+
+  linkPath(sx, sy, tx, ty) {
+    const mx = (sx + tx) / 2;
+    return `M${sx},${sy} C${mx},${sy} ${mx},${ty} ${tx},${ty}`;
+  }
+
+  setupDrag(nodeGroups) {
+    const drag = d3.drag()
+      .clickDistance(5) // movements < 5px count as clicks, not drags
+      .on('start', (event, d) => {
+        // Prevent the zoom/pan handler from receiving this event
+        event.sourceEvent.stopPropagation();
+        // Bring dragged node to front
+        const el = this.g.selectAll('.node').filter(n => n.data.id === d.data.id);
+        el.raise();
+      })
+      .on('drag', (event, d) => {
+        // d3.pointer with this.g.node() gives coords in g's local space,
+        // correctly accounting for the zoom transform
+        const [mx, my] = d3.pointer(event, this.g.node());
+        d.x = mx;
+        d.y = my;
+
+        // Move the node element
+        this.g.selectAll('.node')
+          .filter(n => n.data.id === d.data.id)
+          .attr('transform', `translate(${d.x},${d.y})`);
+
+        // Update position in live map
+        this.nodePositions.set(d.data.id, { x: d.x, y: d.y });
+
+        // Redraw all links connected to this node
+        this.g.selectAll('.link')
+          .filter(l => l.sourceId === d.data.id || l.targetId === d.data.id)
+          .attr('d', l => {
+            const sp = this.nodePositions.get(l.sourceId) || { x: l.sx, y: l.sy };
+            const tp = this.nodePositions.get(l.targetId) || { x: l.tx, y: l.ty };
+            return this.linkPath(sp.x, sp.y, tp.x, tp.y);
+          });
+      })
+      .on('end', (event, d) => {
+        // Persist the custom position
+        this.customPositions.set(d.data.id, { x: d.x, y: d.y });
+      });
+
+    nodeGroups.call(drag);
+  }
+
   // --- Rendering (GitMind-style: root center, branches left & right) ---
 
   render() {
