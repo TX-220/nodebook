@@ -453,6 +453,8 @@ class BookmarkMindMap {
       .on('dblclick', (event, d) => this.handleNodeDblClick(event, d))
       .on('contextmenu', (event, d) => this.handleContextMenu(event, d));
 
+    this.setupDrag(nodeGroups);
+
     nodeGroups.append('circle')
       .attr('r', d => d.depth === 0 ? 10 : 5);
 
