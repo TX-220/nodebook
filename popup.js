@@ -478,6 +478,17 @@ class BookmarkMindMap {
       this.nodePositions.set(n.data.id, { x: n.x, y: n.y });
     });
 
+    // Second pass: cascade `side` from parent → children so text direction is
+    // always consistent within a branch, even after drag-across-center.
+    // allNodes is already depth-sorted, so each parent is processed before its
+    // children, meaning the cascade propagates to all depths in one sweep.
+    allNodes.forEach(n => {
+      if (n.depth > 1 && n.parentId) {
+        const parent = nodeById.get(n.parentId);
+        if (parent) n.side = parent.side;
+      }
+    });
+
     // Build parent→children map used by subtree drag
     this.nodeChildren = new Map();
     allNodes.forEach(n => {
