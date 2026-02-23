@@ -1,0 +1,332 @@
+:root {
+    --bg-dark: #0f1115;
+    --bg-card: rgba(30, 34, 42, 0.8);
+    --primary: #4f46e5;
+    --primary-hover: #6366f1;
+    --secondary: #334155;
+    --accent: #0ea5e9;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass: rgba(255, 255, 255, 0.03);
+    --folder-color: #f59e0b;
+    --link-color: #64748b;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    min-width: 400px;
+    min-height: 400px;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header & Controls */
+#app-header {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+}
+
+.header-top,
+.header-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.search-container {
+    position: relative;
+    flex: 0 1 280px;
+}
+
+#search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 13px;
+    outline: none;
+    transition: var(--transition);
+}
+
+#search-input:focus {
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.5;
+}
+
+.toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    color: white;
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.btn-icon {
+    padding: 8px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    font-size: 16px;
+}
+
+/* Main View */
+#view-container {
+    flex: 1;
+    position: relative;
+}
+
+#mindmap {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+#mindmap:active {
+    cursor: grabbing;
+}
+
+/* Level-based Colors (Planets) */
+:root {
+    --lvl-0: #ffcc33;
+    /* Sun */
+    --lvl-1: #00d2ff;
+    /* Earth-like blue */
+    --lvl-2: #ff4b2b;
+    /* Mars-like red */
+    --lvl-3: #a8ff78;
+    /* Green planet */
+    --lvl-4: #f77062;
+    /* Coral */
+    --lvl-5: #667eea;
+    /* Indigo */
+    --lvl-6: #89f7fe;
+    /* Cyan */
+}
+
+/* SVG Elements & Cinematic Effects */
+.node circle {
+    fill: #1a1a1a;
+    stroke: var(--primary);
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    transition: var(--transition);
+}
+
+/* The Sun (Root Node) */
+.node.lvl-0 circle {
+    fill: var(--lvl-0);
+    stroke: #ff9900;
+    stroke-width: 4px;
+    filter: drop-shadow(0 0 15px #ffcc33) drop-shadow(0 0 30px #ff6600);
+    animation: sun-pulse 3s ease-in-out infinite, solar-flare 10s linear infinite;
+}
+
+@keyframes sun-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px #ffcc33) drop-shadow(0 0 30px #ff6600);
+    }
+
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 25px #ffcc33) drop-shadow(0 0-50px #ff6600);
+    }
+}
+
+@keyframes solar-flare {
+    0% {
+        stroke-dasharray: 0, 100;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 50, 50;
+    }
+
+    100% {
+        stroke-dasharray: 0, 100;
+        stroke-dashoffset: -100;
+    }
+}
+
+/* Planet Nodes (Levels 1+) */
+.node.lvl-1 circle {
+    stroke: var(--lvl-1);
+    filter: drop-shadow(0 0 8px var(--lvl-1));
+}
+
+.node.lvl-2 circle {
+    stroke: var(--lvl-2);
+    filter: drop-shadow(0 0 8px var(--lvl-2));
+}
+
+.node.lvl-3 circle {
+    stroke: var(--lvl-3);
+    filter: drop-shadow(0 0 8px var(--lvl-3));
+}
+
+.node.lvl-4 circle {
+    stroke: var(--lvl-4);
+    filter: drop-shadow(0 0 8px var(--lvl-4));
+}
+
+.node.lvl-5 circle {
+    stroke: var(--lvl-5);
+    filter: drop-shadow(0 0 8px var(--lvl-5));
+}
+
+.node.lvl-plus circle {
+    stroke: var(--lvl-6);
+    filter: drop-shadow(0 0 8px var(--lvl-6));
+}
+
+.node.collapsed circle {
+    fill: rgba(255, 255, 255, 0.1);
+    stroke-dasharray: 3, 3;
+}
+
+/* Flowing Glow Links */
+.link {
+    fill: none;
+    stroke: var(--link-color);
+    stroke-width: 2px;
+    stroke-opacity: 0.2;
+    transition: stroke-opacity 0.3s;
+}
+
+.link-glow {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 3px;
+    stroke-opacity: 0.6;
+    stroke-linecap: round;
+    filter: blur(2px) drop-shadow(0 0 5px var(--primary));
+    stroke-dasharray: 10, 100;
+    animation: flow-light 4s linear infinite;
+}
+
+@keyframes flow-light {
+    from {
+        stroke-dashoffset: 200;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Text Styles */
+.node text {
+    fill: var(--text-main);
+    font-size: 11px;
+    font-weight: 500;
+    pointer-events: none;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 1), 0 0 5px rgba(0, 0, 0, 0.8);
+    transition: var(--transition);
+}
+
+.node.lvl-0 text {
+    font-size: 14px;
+    font-weight: bold;
+    fill: #fff;
+    text-shadow: 0 0 15px #ffcc33;
+}
+
+/* Hover Effects */
+.node:hover circle {
+    stroke-width: 4px;
+    filter: brightness(1.2) drop-shadow(0 0 15px white);
+}
+
+.node:hover text {
+    fill: #fff;
+    font-size: 12px;
+}
+
+/* Performance Mode (Static Mode) overrides */
+body.static-mode .node circle {
+    animation: none !important;
+    filter: none !important;
+}
+
+body.static-mode .node text {
+    text-shadow: 1px 1px 2px #000 !important;
+}
+
+body.static-mode .node.lvl-0 circle {
+    fill: var(--lvl-0) !important;
+    stroke: #ff9900 !important;
+}
+
+body.static-mode .link-glow {
+    display: none !important;
+    /* Remove the extra glowing animated path */
+}
+
+body.static-mode .link {
+    stroke-opacity: 0.6 !important;
+    filter: none !important;
+}
