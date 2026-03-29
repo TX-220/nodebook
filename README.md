@@ -2,7 +2,7 @@
 
 A Chrome extension that visualizes your bookmarks as an interactive D3.js mind map.
 
-![NodeBook](icon128.png)
+![NodeBook Screenshot](NodeBook.png)
 
 ## Features
 
