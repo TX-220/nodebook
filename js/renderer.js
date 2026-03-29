@@ -27,6 +27,7 @@ export class MindMapRenderer {
         this.tree = d3.tree().nodeSize([40, 220]);
         this.root = null;
         this.layoutMode = 'gantt'; // 'gantt' or 'mindmap'
+        this._highlightRaf = null;
     }
 
     /**
@@ -219,18 +220,20 @@ export class MindMapRenderer {
     }
 
     /**
-     * Applies search highlighting.
+     * Applies search highlighting, batched in requestAnimationFrame.
      */
     highlight(matchIds) {
-        if (!matchIds || matchIds.size === 0) {
-            this.zoomGroup.selectAll(".node")
-                .classed("highlight", false)
-                .classed("dimmed", false);
-            return;
-        }
-
-        this.zoomGroup.selectAll(".node")
-            .classed("highlight", d => matchIds.has(d.data.id))
-            .classed("dimmed", d => !matchIds.has(d.data.id));
+        cancelAnimationFrame(this._highlightRaf);
+        this._highlightRaf = requestAnimationFrame(() => {
+            if (!matchIds || matchIds.size === 0) {
+                this.zoomGroup.selectAll(".node")
+                    .classed("highlight", false)
+                    .classed("dimmed", false);
+            } else {
+                this.zoomGroup.selectAll(".node")
+                    .classed("highlight", d => matchIds.has(d.data.id))
+                    .classed("dimmed", d => !matchIds.has(d.data.id));
+            }
+        });
     }
 }

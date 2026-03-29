@@ -5,6 +5,7 @@
 export class UIController {
     constructor(callbacks) {
         this.callbacks = callbacks;
+        this._searchTimer = null;
         this.initEventListeners();
     }
 
@@ -13,7 +14,10 @@ export class UIController {
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                this.callbacks.onSearch(e.target.value);
+                clearTimeout(this._searchTimer);
+                this._searchTimer = setTimeout(() => {
+                    this.callbacks.onSearch(e.target.value);
+                }, 250);
             });
         }
 

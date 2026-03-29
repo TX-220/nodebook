@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Bookmark Mind Map",
+  "name": "NodeBook",
   "version": "2.0.0",
   "description": "Visualize your bookmarks as an interactive mind map with import/export and inline editing",
   "permissions": [

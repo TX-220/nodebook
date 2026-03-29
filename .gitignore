@@ -1,0 +1,36 @@
+# ============================================================
+# NodeBook — Chrome Extension .gitignore
+# ============================================================
+
+# --- Stray infrastructure files (DKIM / Google Cloud DNS) ---
+dkim.bat
+dkim_record.zone
+dkim_value.txt
+run_dkim.ps1
+transaction.yaml
+update_dns.sh
+zone_import.yaml
+ov_verify.py
+
+# Python virtual environment (openvino / numpy setup)
+ov_win_env/
+
+# --- OS and editor artifacts ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.suo
+*.user
+
+# --- Distribution output (created by the package.json build script) ---
+dist/
+*.zip
+
+# --- Logs ---
+*.log
+npm-debug.log*
+
+# --- Chrome extension local overrides (never commit) ---
+.env

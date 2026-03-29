@@ -35,10 +35,10 @@ body {
 
 /* Header & Controls */
 #app-header {
-    padding: 12px 16px;
+    padding: 6px 12px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
     background: var(--glass);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
@@ -60,14 +60,14 @@ body {
 
 #search-input {
     width: 100%;
-    padding: 8px 12px 8px 36px;
+    padding: 5px 10px 5px 32px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text-main);
     font-size: 13px;
     outline: none;
-    transition: var(--transition);
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 
 #search-input:focus {
@@ -93,14 +93,19 @@ body {
 
 /* Buttons */
 .btn {
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 10px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     border: 1px solid transparent;
-    transition: var(--transition);
+    transition: background-color 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
     white-space: nowrap;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
 }
 
 .btn-primary {
@@ -170,7 +175,7 @@ body {
     stroke: var(--primary);
     stroke-width: 2px;
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-    transition: var(--transition);
+    transition: r 0.4s ease, opacity 0.4s ease, stroke-width 0.3s ease;
 }
 
 /* The Sun (Root Node) */
@@ -180,6 +185,7 @@ body {
     stroke-width: 4px;
     filter: drop-shadow(0 0 15px #ffcc33) drop-shadow(0 0 30px #ff6600);
     animation: sun-pulse 3s ease-in-out infinite, solar-flare 10s linear infinite;
+    will-change: transform, filter;
 }
 
 @keyframes sun-pulse {
@@ -192,7 +198,7 @@ body {
 
     50% {
         transform: scale(1.1);
-        filter: drop-shadow(0 0 25px #ffcc33) drop-shadow(0 0-50px #ff6600);
+        filter: drop-shadow(0 0 25px #ffcc33) drop-shadow(0 0 -50px #ff6600);
     }
 }
 
@@ -263,9 +269,10 @@ body {
     stroke-width: 3px;
     stroke-opacity: 0.6;
     stroke-linecap: round;
-    filter: blur(2px) drop-shadow(0 0 5px var(--primary));
+    filter: drop-shadow(0 0 5px var(--primary));
     stroke-dasharray: 10, 100;
     animation: flow-light 4s linear infinite;
+    will-change: stroke-dashoffset;
 }
 
 @keyframes flow-light {
@@ -285,7 +292,7 @@ body {
     font-weight: 500;
     pointer-events: none;
     text-shadow: 0 0 10px rgba(0, 0, 0, 1), 0 0 5px rgba(0, 0, 0, 0.8);
-    transition: var(--transition);
+    transition: font-size 0.3s ease, opacity 0.4s ease, fill 0.3s ease;
 }
 
 .node.lvl-0 text {

@@ -1,0 +1,16 @@
+{
+  "name": "nodebook",
+  "version": "2.0.0",
+  "description": "Chrome extension that visualizes bookmarks as an interactive D3.js mind map",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist && zip -r dist/nodebook-v$(node -p \"require('./manifest.json').version\").zip . --exclude '*.git*' --exclude 'dist/*' --exclude 'node_modules/*' --exclude '.docs/*' --exclude '*.md' --exclude 'package.json' --exclude '.env*' --exclude '.gitignore'",
+    "validate": "node -e \"JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest.json is valid JSON')\"",
+    "start": "echo 'No dev server needed. Load the extension directory in chrome://extensions with Developer Mode enabled.'"
+  },
+  "keywords": ["chrome-extension", "bookmarks", "mind-map", "d3", "visualization"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}
