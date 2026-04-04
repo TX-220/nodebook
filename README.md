@@ -67,11 +67,6 @@ To validate `manifest.json` syntax:
 npm run validate
 ```
 
-## Credits
-
-- **Claude Code** - Core functionality and implementation
-- **Gemini** - UI design and styling
-
 ## License
 
 [MIT](LICENSE)
