@@ -67,11 +67,10 @@ To validate `manifest.json` syntax:
 npm run validate
 ```
 
-## Credits
+## Author
 
-- **Claude Code** - Core functionality and implementation
-- **Gemini** - UI design and styling
+TX-220 — Concept, design, direction. Claude (Anthropic) — Implementation. Claude Code & Claude Desktop — Development. Gemini (UI/styling) — *dendrite, nodebook only*.
 
 ## License
 
-[MIT](LICENSE)
+MIT — See [LICENSE](LICENSE) file for details.
