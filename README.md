@@ -69,7 +69,7 @@ npm run validate
 
 ## Author
 
-TX-220 — Concept, design, direction. Claude (Anthropic) — Implementation. Claude Code & Claude Desktop — Development. Gemini (UI/styling)
+TX-220 — Concept, design, direction. Claude (Anthropic) — Implementation. [Claude Code](https://claude.com/claude-code) & Claude Desktop — Development. Gemini (UI/styling)
 
 ## License
 
