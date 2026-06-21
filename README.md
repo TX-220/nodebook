@@ -74,3 +74,5 @@ TX-220 — Concept, design, direction. Claude (Anthropic) — Implementation. [C
 ## License
 
 MIT — See [LICENSE](LICENSE) file for details.
+
+This was an experimental project developed with Claude (Haiku). Later improved significantly with Grok.
